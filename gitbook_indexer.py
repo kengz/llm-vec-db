@@ -1,9 +1,9 @@
 from dotenv import load_dotenv
 from langchain.callbacks import get_openai_callback
 from langchain.chains import RetrievalQAWithSourcesChain
+from langchain.chat_models import ChatOpenAI
 from langchain.document_loaders import GitbookLoader
 from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.llms import OpenAI
 from langchain.text_splitter import TokenTextSplitter
 from langchain.vectorstores import Weaviate
 import openai
@@ -46,7 +46,7 @@ sim_res_docs
 retriever = db.as_retriever(search_kwargs={'k': 2})
 retriever.get_relevant_documents(query)
 
-llm = OpenAI(temperature=0.0)
+llm = ChatOpenAI(temperature=0.0, model_name='gpt-3.5-turbo')
 chain = RetrievalQAWithSourcesChain.from_chain_type(llm, chain_type="stuff", retriever=retriever)
 
 with get_openai_callback() as cb:
