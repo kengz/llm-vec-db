@@ -1,0 +1,20 @@
+# See full values.yaml in https://github.com/weaviate/weaviate-helm/blob/master/weaviate/values.yaml
+
+# Scale replicas of Weaviate. Note that as of v1.8.0 dynamic scaling is limited
+# to cases where no data is imported yet. Scaling down after importing data may
+# break usability. Full dynamic scalability will be added in a future release.
+replicas: 3
+resources:
+  requests:
+    cpu: "500m"
+    memory: "300Mi"
+  limits:
+    cpu: "1000m"
+    memory: "1Gi"
+
+# The Persistent Volume Claim settings for Weaviate. If there's a
+# storage.fullnameOverride field set, then the default pvc will not be
+# created, instead the one defined in fullnameOverride will be used
+storage:
+  size: 10Gi
+  storageClassName: ""

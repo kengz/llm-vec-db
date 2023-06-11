@@ -6,7 +6,6 @@ from langchain.document_loaders import GitbookLoader
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import TokenTextSplitter
 from langchain.vectorstores import Weaviate
-import openai
 import os
 import pydash as ps
 import weaviate
@@ -28,6 +27,7 @@ docs = loader.load()
 text_splitter = TokenTextSplitter(chunk_size=1000, chunk_overlap=0)
 docs = text_splitter.split_documents(docs)
 
+# TODO but this internal retry is not reliable and is hardcoded in langchain. We need control. can monkeypatch langchain.embeddings.openai.embed_with_retry
 for c_docs in ps.chunk(docs, 20):
     db.add_documents(c_docs)
 
