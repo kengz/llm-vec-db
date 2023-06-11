@@ -2,6 +2,8 @@
 
 Vector database applications using embedding vectors from LLM.
 
+> Work in progress
+
 ## Prerequisites
 
 ### OpenAI API
@@ -22,12 +24,11 @@ First, deploy [Weaviate](https://weaviate.io) through:
 Deploy using local values file and:
 
 ```bash
-k create namespace weaviate
-# change namespace
-kcn weaviate
-# install weaviate
-helm upgrade -i weaviate weaviate/weaviate -n weaviate -f ./helm/values.yaml
+export OPENAI_API_KEY=<get from https://platform.openai.com/account/api-keys>
+helm upgrade -i weaviate weaviate/weaviate -n weaviate --create-namespace -f ./helm/values.yaml --set modules.text2vec-openai.enabled=true,modules.text2vec-openai.apiKey=$OPENAI_API_KEY
 ```
+
+Then port forward Weaviate `kubectl port-forward svc/weaviate -n weaviate 8080:80` and visit http://localhost:8080/v1/docs
 
 ## Installation
 
@@ -39,23 +40,25 @@ Create a Conda environment for this project and install dependencies:
 micromamba env create -f environment.yml --yes
 ```
 
+> Activate the environment with `micromamba activate llm` before running any Python commands below
+
 ## Usage
 
 - set `.env` as follows
 
   ```bash
-  OPENAI_API_KEY=<get https://platform.openai.com/account/api-keys>
+  OPENAI_API_KEY=<get from https://platform.openai.com/account/api-keys>
   WEAVIATE_URL=http://localhost:8080
   ```
 
 - port forward Weaviate to http://localhost:8080
 
   ```bash
-  k port-forward svc/weaviate -n weaviate 8080:80
+  kubectl port-forward svc/weaviate -n weaviate 8080:80
   ```
 
-- run the example indexer `gitbook_indexer.py`
+- run the example indexer [./llm_vec_db/index_gitbook.py](./llm_vec_db/index_gitbook.py)
 
   ```bash
-  python gitbook_indexer.py
+  python llm_vec_db/index_gitbook.py
   ```
